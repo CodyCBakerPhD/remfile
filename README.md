@@ -42,7 +42,13 @@ Furthermore, since the url can be an object with a get_url() method, it is possi
 
 ## How?
 
-A file-like object is created that reads the remote file in chunks using the requests library. A relatively small default chunk size is used, but when remfile detects that a large data array is being accessed, it adaptively switches to larger chunk sizes. For very large data arrays, the system will use multiple threads to read the data in parallel.
+A file-like object is created that reads the remote file in chunks using the requests library. A relatively small default chunk size is used, but when remfile detects that a large data array is being accessed, it adaptively switches to larger chunk sizes. Optionally (see below), very large ranges can be fetched in parallel threads.
+
+## Threads
+
+By default, every HTTP request is made in the thread that calls `read()`. h5py holds a global lock while it reads from a file object, and depends on this: if the requests were made in another thread, a garbage collection there that frees h5py objects would wait for h5py's lock, which the reading thread holds while it waits for the requests, and deadlock.
+
+Passing `_max_threads` greater than 1 fetches large ranges (at least 8 MB) in a pool of threads, which can be faster, but is not safe under h5py for that reason.
 
 ## Timeouts and closing
 

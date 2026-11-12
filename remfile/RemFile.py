@@ -44,7 +44,7 @@ class RemFile:
             _max_cache_size (int, optional): The maximum number of bytes to keep in the cache.
             _chunk_increment_factor (int, optional): The factor by which to increase the number of chunks to load when the system detects that the chunks are being loaded in order.
             _bytes_per_thread (int, optional): The minimum number of bytes to load in each thread.
-            _max_threads (int, optional): The maximum number of threads to use when loading the file.
+            _max_threads (int, optional): The maximum number of threads to use when loading the file. With the default of 1, every request is made in the calling thread, which h5py needs (see the README); with more, large ranges are fetched in a thread pool.
             _max_chunk_size (int, optional): The maximum chunk size. When reading, the chunks will be loaded in multiples of the minimum chunk size up to this size.
             _impose_request_failures_for_testing (bool, optional): Whether to impose request failures for testing purposes. Defaults to False.
             _size: The size of the file in bytes. If not provided, the size will be determined by making a GET request to the file.
